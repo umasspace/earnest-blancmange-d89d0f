@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Task Manager</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 2rem auto; padding: 0 1rem; background-color: #f4f4f9; }
+        .container { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        h1 { color: #333; }
+        input[type="text"] { padding: 10px; width: 70%; border: 1px solid #ddd; border-radius: 4px; }
+        button { padding: 10px 15px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #218838; }
+        ul { list-style-type: none; padding: 0; }
+        li { background: #fff; border-bottom: 1px solid #eee; padding: 10px; display: flex; justify-content: space-between; }
+        li:hover { background: #fafafa; }
+        .delete-btn { background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; }
+        .delete-btn:hover { background: #c82333; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>My Dynamic Task List</h1>
+    <p>This page changes without reloading (Dynamic).</p>
+    
+    <!-- Input Section -->
+    <div>
+        <input type="text" id="taskInput" placeholder="Enter a new task...">
+        <button onclick="addTask()">Add Task</button>
+    </div>
+
+    <!-- Dynamic List Section -->
+    <ul id="taskList">
+        <!-- Items will be added here via JavaScript -->
+    </ul>
+</div>
+
+<script>
+    // 1. State: This array holds our data dynamically
+    let tasks = [];
+
+    // 2. Logic: Function to add data and update the DOM
+    function addTask() {
+        const input = document.getElementById('taskInput');
+        const taskText = input.value;
+
+        if (taskText === '') {
+            alert("Please write a task!");
+            return;
+        }
+
+        // Add to our data array
+        tasks.push({ text: taskText, id: Date.now() });
+        
+        // Clear input
+        input.value = '';
+
+        // Re-render the list
+        renderTasks();
+    }
+
+    // 3. Rendering: Function to display the current state
+    function renderTasks() {
+        const list = document.getElementById('taskList');
+        list.innerHTML = ''; // Clear current list
+
+        tasks.forEach(task => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span>${task.text}</span>
+                <button class="delete-btn" onclick="deleteTask(${task.id})">Delete</button>
+            `;
+            list.appendChild(li);
+        });
+    }
+
+    // 4. Interaction: Function to remove data
+    function deleteTask(id) {
+        tasks = tasks.filter(task => task.id !== id);
+        renderTasks();
+    }
+
+    // Initialize
+    renderTasks();
+</script>
+
+</body>
+</html>
